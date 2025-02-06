@@ -35,6 +35,35 @@ static void draw_hello_image()
         }
 }
 
+void drawPixel(short x, short y, char color, char bright=0) {
+    if (x>V_BUF_H-1) x=V_BUF_H-1 ;
+    if (x<0) x=0;
+    if (y<0) y=0;
+    if (y > V_BUF_W-1) y = V_BUF_W-1;
+
+    int pixel = ((V_BUF_H * y) + x) ;
+    if (pixel & 1) g_gbuf[pixel>>1] = (g_gbuf[pixel>>1] & 0x0F) | ((bright<<3 | color) << 4);
+        else       g_gbuf[pixel>>1] = (g_gbuf[pixel>>1] & 0xF0) |  (bright<<3 | color);
+}
+
+void drawVLine(short x, short y, short h, char color, char bright=0) {
+    for (short i=y; i<(y+h); i++) {
+        drawPixel(x, i, color, bright) ;
+    }
+}
+
+void drawHLine(short x, short y, short w, char color, char bright=0) {
+    for (short i=x; i<(x+w); i++) {
+        drawPixel(i, y, color, bright) ;
+    }
+}
+
+void drawRect(short x, short y, short w, short h, char color, char bright=0) {
+    drawHLine(x, y, w, color, bright);
+    drawHLine(x, y+h-1, w, color, bright);
+    drawVLine(x, y, h, color, bright);
+    drawVLine(x+w-1, y, h, color, bright);
+}
 
 // int data_for_save[FLASH_PAGE_SIZE/sizeof(int)]; 
 const int *flash_data_for_save = (const int *) (XIP_BASE + (PICO_FLASH_SIZE_BYTES - FLASH_SECTOR_SIZE));
