@@ -42,11 +42,11 @@ const int *flash_data_for_save = (const int *) (XIP_BASE + (PICO_FLASH_SIZE_BYTE
 bool is_start_core0=false;
 
 void setup() {
-  
-    vreg_set_voltage(VREG_VOLTAGE_1_25);
+    vreg_set_voltage(VREG_VOLTAGE_1_25);    // Поднимаем напряжение питания для стабильности работы при разгоне до 252 МГц (Номинал 125 МГц - разгон в 2 раза)
     sleep_ms(100);
-    set_sys_clock_khz(252000, true);
+    set_sys_clock_khz(252000, true);        // Разгон до 252 МГц. Частота пикселов для VGA 640*480 25,175 МГц
     sleep_ms(10);
+
     Serial.begin(115200);
 
 //      //загружаем ранее сохранённые данные заxвата
