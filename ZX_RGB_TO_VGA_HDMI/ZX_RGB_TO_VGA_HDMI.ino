@@ -20,31 +20,20 @@ extern "C"{
 
 cap_set_t capture_setings;
 
-
-
-
 static void draw_hello_image()
 {
-    uint8_t* vbuf=(uint8_t*)v_buf_get_out();
-    // uint8_t* vbuf1=vbuf+V_BUF_SZ;
-    // uint8_t* vbuf2=vbuf1+V_BUF_SZ;
+    uint8_t* vbuf=(uint8_t*)v_buf_get_out();    // Адрес массива экранной памяти размером V_BUF_H*V_BUF_W/2 (2 точки на байт)
 
-    for(int y=0;y<V_BUF_H;y++)
-        for(int x=0;x<V_BUF_W/2;x++)
-            {
-                uint8_t i=(y/15)&0x0f;
-                uint8_t c=((i&1)<<3)|(i>>1);
-                c|=c<<4;
-
-                //uint8_t c=img01[y*(V_BUF_W/2)+x];
-                *vbuf++=c;
-                // *vbuf1++=c;
-                // *vbuf2++=c;
-            }
-    
-
+    for(int y=0; y<V_BUF_H; y++)
+        for(int x=0; x<V_BUF_W/2; x++)
+        {
+            // Поменяв местами в этом цикле переменные x и y, получим 16 вертикальных полос
+            uint8_t i=(y/15)&0x0f;        // Делим экран на 16 горизонтальных полос
+            uint8_t c=((i&1)<<3)|(i>>1);  // Последовательность 0, 8, 1, 9, 2, a, 3, b , 4, c, 5, d, 6, e, 7, f   : b3 - яркость, b2-b0 - цвет
+            c|=c<<4;                      // В байте 2 точки. Копируем.
+            *vbuf++ = c;
+        }
 }
-
 
 
 // int data_for_save[FLASH_PAGE_SIZE/sizeof(int)]; 
